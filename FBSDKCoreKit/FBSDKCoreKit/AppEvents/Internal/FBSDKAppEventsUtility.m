@@ -8,7 +8,9 @@
 
 #import "FBSDKAppEventsUtility.h"
 
+#if !FBSDK_IDFA_DISALLOWED
 #import <AdSupport/AdSupport.h>
+#endif
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
@@ -27,7 +29,9 @@
 
 @interface FBSDKAppEventsUtility ()
 
+#if !FBSDK_IDFA_DISALLOWED
 @property (nullable, nonatomic) ASIdentifierManager *cachedAdvertiserIdentifierManager;
+#endif
 
 @end
 
@@ -151,11 +155,16 @@ static FBSDKAppEventsUtility *_shared;
     }
   }
 
+#if FBSDK_IDFA_DISALLOWED
+  return nil;
+#else
   ASIdentifierManager *manager = [self _asIdentifierManagerWithShouldUseCachedManager:shouldUseCachedManager
                                                              dynamicFrameworkResolver:dynamicFrameworkResolver];
   return manager.advertisingIdentifier.UUIDString;
+#endif
 }
 
+#if !FBSDK_IDFA_DISALLOWED
 - (ASIdentifierManager *)_asIdentifierManagerWithShouldUseCachedManager:(BOOL)shouldUseCachedManager
                                                dynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver
 {
@@ -172,6 +181,7 @@ static FBSDKAppEventsUtility *_shared;
   }
   return manager;
 }
+#endif //!FBSDK_IDFA_DISALLOWED
 
 - (BOOL)isStandardEvent:(nullable NSString *)event
 {
