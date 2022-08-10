@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#define FBSDK_IDFA_DISALLOWED 1
+
 #import "FBSDKSettings+Internal.h"
 
 #if !FBSDK_IDFA_DISALLOWED

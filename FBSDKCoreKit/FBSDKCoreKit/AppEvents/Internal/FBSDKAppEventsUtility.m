@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#define FBSDK_IDFA_DISALLOWED 1
+
 #import "FBSDKAppEventsUtility.h"
 
 #if !FBSDK_IDFA_DISALLOWED
@@ -492,7 +494,9 @@ static FBSDKAppEventsUtility *_shared;
   self.settings = nil;
   self.internalUtility = nil;
   self.errorFactory = nil;
+#if !FBSDK_IDFA_DISALLOWED
   self.cachedAdvertiserIdentifierManager = nil;
+#endif // !FBSDK_IDFA_DISALLOWED
 }
 
 #endif

@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#define FBSDK_IDFA_DISALLOWED 1
+
 #import "FBSDKDynamicFrameworkLoader.h"
 
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -121,7 +123,11 @@ _fbsdkdfl_handle_get_impl_(Security)
 
 - (Class)asIdentifierManagerClass
 {
+#if !FBSDK_IDFA_DISALLOWED
   return fbsdkdfl_ASIdentifierManagerClass();
+#else
+  return nil;
+#endif // !FBSDK_IDFA_DISALLOWED
 }
 
 #define _fbsdkdfl_Security_get_k(SYMBOL) _fbsdkdfl_symbol_get_k(Security, SYMBOL, CFTypeRef *)
