@@ -6,7 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#if !FBSDK_IDFA_DISALLOWED
 #import <AdSupport/AdSupport.h>
+#endif
 
 #import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
@@ -22,9 +24,9 @@
 #define FBSDK_APPEVENTSUTILITY_CAMPAIGNIDS_KEY @"com.facebook.sdk.campaignids"
 
 @interface FBSDKAppEventsUtility ()
-
+#if !FBSDK_IDFA_DISALLOWED
 @property (nullable, nonatomic) ASIdentifierManager *cachedAdvertiserIdentifierManager;
-
+#endif
 @end
 
 @implementation FBSDKAppEventsUtility
@@ -150,12 +152,16 @@ static FBSDKAppEventsUtility *_shared;
       return nil;
     }
   }
-
+#if FBSDK_IDFA_DISALLOWED
+  return nil;
+#else
   ASIdentifierManager *manager = [self _asIdentifierManagerWithShouldUseCachedManager:shouldUseCachedManager
                                                              dynamicFrameworkResolver:dynamicFrameworkResolver];
   return manager.advertisingIdentifier.UUIDString;
+#endif
 }
 
+#if !FBSDK_IDFA_DISALLOWED
 - (ASIdentifierManager *)_asIdentifierManagerWithShouldUseCachedManager:(BOOL)shouldUseCachedManager
                                                dynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver
 {
@@ -172,6 +178,7 @@ static FBSDKAppEventsUtility *_shared;
   }
   return manager;
 }
+#endif //!FBSDK_IDFA_DISALLOWED
 
 - (BOOL)isStandardEvent:(nullable NSString *)event
 {
@@ -516,7 +523,9 @@ static FBSDKAppEventsUtility *_shared;
   self.internalUtility = nil;
   self.errorFactory = nil;
   self.dataStore = nil;
+  #if !FBSDK_IDFA_DISALLOWED
   self.cachedAdvertiserIdentifierManager = nil;
+  #endif // !FBSDK_IDFA_DISALLOWED
 }
 
 #endif

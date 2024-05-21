@@ -6,8 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#if !FBSDK_IDFA_DISALLOWED
 import AdSupport
 import AppTrackingTransparency
+#endif
 import Foundation
 
 @objcMembers
@@ -390,7 +392,11 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
       } else if #available(iOS 14, *) {
         return _advertisingTrackingStatus
       } else {
+#if FBSDK_IDFA_DISALLOWED
+        return .disallowed
+#else
         return ASIdentifierManager.shared().isAdvertisingTrackingEnabled ? .allowed : .disallowed
+#endif
       }
     }
     set {
